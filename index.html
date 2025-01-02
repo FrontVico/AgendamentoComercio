@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Agende seu horário no Biel Barbeiro e conheça nossos serviços personalizados de barbearia!">
+  <title>Biel Barbeiro</title>
+
+  <!-- JS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/splide@4/dist/js/splide.min.js"></script>
+  <!-- JS -->
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/splide@4/dist/css/splide.min.css">
+  <link rel="stylesheet" href="estilos/style.css">
+  <link rel="stylesheet" href="estilos/tailwind.css">
+  <!-- CSS -->
+
+</head>
+
+<body class="bg-gray-100 text-gray-900">
+
+  <!-- Header -->
+  <header class="text-white py-4 px-6 flex justify-between items-center">
+    <a href="login.html"><img class="user" src="assets/icons8-user-30.png" alt="" style="cursor: pointer;"></a>
+    <p class="text-lg font-bold">Biel Barbeiro</p>
+    <ul class="hidden md:flex space-x-4">
+      <li><a href="#" class="hover:text-blue-300">Página Inicial</a></li>
+      <li><a href="#MeusProjetos" class="hover:text-blue-300">Preços</a></li>
+      <li><a href="#mapa" class="hover:text-blue-300">Localização</a></li>
+      <li><a href="agendar.html" class="hover:text-blue-300">Agendar</a></li>
+    </ul>
+    <button class="block md:hidden text-white" id="mobile-menu">☰</button>
+  </header>
+
+  <!-- Menu Mobile -->
+  <nav class="mobile-menu-links text-white p-4 md:hidden font-bold">
+    <a href="#" class="py-2 hover:text-blue-300">Página Inicial</a>
+    <a href="#MeusProjetos" class="py-2 hover:text-blue-300">Preços</a>
+    <a href="#mapa" class="py-2 hover:text-blue-300">Localização</a>
+    <a href="agendar.html" class="py-2 hover:text-blue-300">Agendar</a>
+  </nav>
+
+  <section class="text-center py-24" style="background-image: url(assets/bielBG.jpg); height: 92vh; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <img class="logo" src="assets/logoBarbearia.png" alt="">
+    <h1 class="text-4xl font-bold text-white">Bem-vindo ao Biel Barbeiro</h1>
+    <p class="mt-4 text-lg text-white">O melhor estilo começa aqui. Agende agora seu horário!</p>
+    <a href="agendar.html"><button class="mt-6 text-white px-6 py-3 rounded" style="background-color: #1d2e4e">Agendar Horário</button></a>
+  </section>
+
+
+  <!-- Clientes -->
+  <section id="MeusProjetos" class="py-12 px-6 bg-gray-100">
+    <h2 class="text-3xl font-bold text-center">Preços</h2>
+    <p class="mt-4 text-center text-gray-700">Confira os estilos e cortes realizados para nossos clientes.</p>
+    <div class="splide mt-8" id="cliente-carousel">
+      <div class="splide__track" style="background-position: center; background-size: cover; background-repeat: no-repeat;">
+        <ul class="splide__list">
+          <li class="splide__slide"><img src="assets/corte.jpeg" alt="Cliente 1" class="w-60 h-60 shadow-lg mx-auto rounded-xl"></li>
+          <li class="splide__slide"><img src="assets/corte1.png" alt="Cliente 2" class="w-60 h-60 shadow-lg mx-auto rounded-xl"></li>
+          <li class="splide__slide"><img src="assets/pigmentação.png" alt="Cliente 3" class="w-60 h-60 shadow-lg mx-auto rounded-xl"></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Localização -->
+  <section id="mapa" class="py-12 px-6">
+    <h2 class="text-3xl font-bold text-center">Localização</h2>
+    <p class="mt-4 text-center text-gray-700">Visite-nos no endereço abaixo:</p>
+    <iframe class="mt-6 mx-auto w-11/12 h-64 border" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3162.9144231212054!2d-122.0842496846824!3d37.42206577982585!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x7a77e9f96fdefd!2zQ29tcGFueSBMbmtd!5e0!3m2!1sen!2sus!4v1607917076828!5m2!1sen!2sus" allowfullscreen="" loading="lazy"></iframe>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-900 text-white text-center py-4">
+    <p>&copy; 2024 Biel Barbeiro. Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    const mobileMenuButton = document.getElementById('mobile-menu');
+    const mobileMenuLinks = document.querySelector('.mobile-menu-links');
+
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenuLinks.classList.toggle('active');
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      new Splide('#cliente-carousel', {
+        type: 'loop',
+        perPage: 1,
+        arrows: true,
+        pagination: false,
+      }).mount();
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Barbearia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SDK do Back4App -->
+    <script src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+    <script>
+      // Inicializar o Back4App
+    Parse.initialize("5bQUrgaEAP7ryKV8CCyaSawpJJR3CscfL9tTGYfV", "JOoCdzCTOIuan3h8Q8qssSx9LTYrnVt9Kwi0x74g");
+    Parse.serverURL = "https://parseapi.back4app.com/";
+
+    // Configurar persistência de sessão
+    Parse.User.enableUnsafeCurrentUser(); // Habilitar manipulação do usuário atual
+    Parse.setAsyncStorage(localStorage); // Persistir sessão no localStorage
+</script>
+    </script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="estilos/tailwind.css">
+    <link rel="stylesheet" href="estilos/style.css">
+    <!-- CSS -->
+</head>
+<body class="items-center justify-center min-h-screen">
+
+
+     <!-- Header -->
+    <header class="text-white py-4 px-6 flex justify-between items-center">
+        <a href="login.html"><img class="user" src="assets/icons8-user-30.png" alt="" style="cursor: pointer;"></a>
+        <p class="text-lg font-bold">Biel Barbeiro</p>
+        <ul class="hidden md:flex space-x-4">
+        <li><a href="index.html" class="hover:text-blue-300">Página Inicial</a></li>
+        </ul>
+        <button class="block md:hidden text-white" id="mobile-menu">☰</button>
+    </header>
+
+    <!-- Menu Mobile -->
+    <nav class="mobile-menu-links text-white p-4 md:hidden font-bold">
+        <a href="index.html" class="py-2 hover:text-blue-300">Página Inicial</a>
+        
+    </nav>
+
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        
+        <!-- Formulário de Login -->
+        <form id="login-form" class="space-y-4 mt-20">
+            <h1 class="text-2xl font-bold text-center mb-4">Bem-vindo à Barbearia</h1>
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="email" name="email" required
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            </div>
+
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
+                <input type="password" id="password" name="password" required
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            </div>
+
+            <button type="submit"
+                class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                Entrar
+            </button>
+        </form>
+
+        <!-- Link para cadastro -->
+        <p class="mt-4 text-center text-sm text-gray-600">
+            Não tem uma conta? <a href="#" id="register-link" class="text-indigo-600 hover:text-indigo-500 font-medium">Cadastre-se</a>
+        </p>
+    </div>
+
+    <!-- Formulário de Cadastro -->
+    <div id="register-form-container" class="hidden bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 class="text-2xl font-bold text-center mb-4">Cadastre-se</h1>
+        <form id="register-form" class="space-y-4">
+            <div>
+                <label for="register-name" class="block text-sm font-medium text-gray-700">Nome</label>
+                <input type="text" id="register-name" name="name" required
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            </div>
+
+            <div>
+                <label for="register-email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="register-email" name="email" required
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            </div>
+
+            <div>
+                <label for="register-password" class="block text-sm font-medium text-gray-700">Senha</label>
+                <input type="password" id="register-password" name="password" required
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            </div>
+
+            <button type="submit"
+                class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                Cadastrar
+            </button>
+        </form>
+
+        <!-- Link para voltar ao login -->
+        <p class="mt-4 text-center text-sm text-gray-600">
+            Já tem uma conta? <a href="#" id="login-link" class="text-green-600 hover:text-green-500 font-medium">Faça login</a>
+        </p>
+    </div>
+
+    <script>
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const registerLink = document.getElementById('register-link');
+    const loginLink = document.getElementById('login-link');
+    const registerFormContainer = document.getElementById('register-form-container');
+    const loginFormContainer = loginForm.parentElement;
+
+    // Alternar entre login e registro
+    registerLink.addEventListener('click', () => {
+        loginFormContainer.classList.add('hidden');
+        registerFormContainer.classList.remove('hidden');
+    });
+
+    loginLink.addEventListener('click', () => {
+        registerFormContainer.classList.add('hidden');
+        loginFormContainer.classList.remove('hidden');
+    });
+
+    // Lógica de Login
+    loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const user = await Parse.User.logIn(email, password);
+            console.log('Login bem-sucedido:', user);
+            alert('Login bem-sucedido!');
+            window.location.href = 'perfil.html'; // Redirecionar
+        } catch (error) {
+            console.error('Erro no login:', error);
+            alert(`Erro ao fazer login: ${error.message}`);
+        }
+    });
+
+    // Lógica de Registro
+    registerForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const name = document.getElementById('register-name').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+
+        if (!name || !email || !password) {
+            alert('Por favor, preencha todos os campos!');
+            return;
+        }
+
+        try {
+            const user = new Parse.User();
+            user.set('username', email); // Username obrigatório no Back4App
+            user.set('password', password);
+            user.set('email', email);
+            user.set('name', name);
+
+            await user.signUp();
+            console.log('Registro bem-sucedido:', user);
+            alert('Conta criada com sucesso! Faça login.');
+            registerFormContainer.classList.add('hidden');
+            loginFormContainer.classList.remove('hidden');
+        } catch (error) {
+            console.error('Erro no registro:', error);
+            alert(`Erro ao criar conta: ${error.message}`);
+        }
+    });
+
+    </script>
+</body>
+</html>

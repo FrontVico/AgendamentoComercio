@@ -1,0 +1,8 @@
+//Login ---> FrontEnd, BackEnd ---> Concluidos 
+
+//Home Page ---> Pagina inicial ---> à concluir;
+//Home Page ---> Tela sobre ---> à concluir;
+//Home Page ---> Meus clientes ---> à concluir;
+//Home Page ---> Localização ---> à concluir;
+//Home Page ---> Agendar ---> à concluir;
+

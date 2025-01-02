@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil do usuário</title>
+
+    <!-- SDK do Back4App -->
+    <script src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+    <script>
+    // Inicializar o Back4App
+    Parse.initialize("5bQUrgaEAP7ryKV8CCyaSawpJJR3CscfL9tTGYfV", "JOoCdzCTOIuan3h8Q8qssSx9LTYrnVt9Kwi0x74g");
+    Parse.serverURL = "https://parseapi.back4app.com/";
+
+     // Configurar persistência de sessão
+    Parse.User.enableUnsafeCurrentUser(); // Habilitar manipulação do usuário atual
+    Parse.setAsyncStorage(localStorage); // Persistir sessão no localStorage
+    </script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="estilos/style.css">
+    <link rel="stylesheet" href="estilos/tailwind.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/splide@4/dist/css/splide.min.css">
+    <!-- CSS -->
+
+    <!-- JS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/splide@4/dist/js/splide.min.js"></script>
+    <!-- JS -->
+</head>
+<body style="background-color:#1d2e4e;">
+
+    <!-- Header -->
+    <header class="text-white py-4 px-6 flex justify-between items-center">
+        <a href="login.html"><img class="user" src="assets/icons8-user-30.png" alt="" style="cursor: pointer;"></a>
+        <p class="text-lg font-bold">Biel Barbeiro</p>
+        <ul class="hidden md:flex space-x-4">
+            <li><a href="index.html" class="hover:text-blue-300">Página Inicial</a></li>
+            <li><a href="#MeusProjetos" class="hover:text-blue-300">Preços</a></li>
+            <li><a href="#mapa" class="hover:text-blue-300">Localização</a></li>
+            <li><a href="agendar.html" class="hover:text-blue-300">Agendar</a></li>
+        </ul>
+        <button class="block md:hidden text-white" id="mobile-menu">☰</button>
+    </header>
+
+    <!-- Menu Mobile -->
+    <nav class="mobile-menu-links text-white p-4 md:hidden font-bold">
+        <a href="index.html" class="py-2 hover:text-blue-300">Página Inicial</a>
+        <a href="#MeusProjetos" class="py-2 hover:text-blue-300">Preços</a>
+        <a href="#mapa" class="py-2 hover:text-blue-300">Localização</a>
+        <a href="agendar.html" class="py-2 hover:text-blue-300">Agendar</a>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="container mx-auto py-8 px-4">
+        <div class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
+            <h1 style="color: #1d2e4e;" class="text-2xl font-bold text-center mb-4">Perfil do Usuário</h1>
+
+            <!-- Avatar com Iniciais -->
+            <div id="profile-avatar" class="flex justify-center items-center w-32 h-32 rounded-full text-white text-3xl font-bold mx-auto mb-4"></div>
+
+            <!-- Nome e Email do Usuário -->
+            <div class="text-center">
+                <p id="user-name" class="text-lg font-bold"></p>
+                <p id="user-email" class="text-sm text-gray-600"></p>
+            </div>
+
+            <!-- Data de Cadastro -->
+            <div class="text-center mt-4">
+                <p id="registration-date" class="text-sm text-gray-500">Data de Cadastro: </p>
+            </div>
+
+            <!-- Histórico de Cortes -->
+            <div class="mt-6">
+                <h2 class="text-lg font-bold text-center mb-4">Histórico de Cortes</h2>
+                <ul id="haircut-history" class="list-disc pl-5 text-gray-700"></ul>
+            </div>
+
+            <!-- Botão de Logout -->
+            <button id="logout-button" 
+                    class="mt-6 w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">
+                Sair da Conta
+            </button>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu');
+        const mobileMenuLinks = document.querySelector('.mobile-menu-links');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenuLinks.classList.toggle('active');
+        });
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const user = Parse.User.current();
+
+            if (user) {
+                const name = user.get("name") || "Usuário";
+                const email = user.get("email");
+                const registrationDate = user.createdAt.toLocaleDateString();
+
+                // Exibir nome, email e data de cadastro
+                document.getElementById("user-name").textContent = name;
+                document.getElementById("user-email").textContent = email;
+                document.getElementById("registration-date").textContent += registrationDate;
+
+                // Gerar iniciais
+                const initials = name.split(" ").map(part => part.charAt(0).toUpperCase()).slice(0, 2).join("");
+
+                // Gerar cor de fundo aleatória
+                const colors = ["#FF5733", "#33FF57", "#3357FF", "#F333FF", "#33FFF5", "#FF33A1"];
+                const backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+                // Atualizar avatar
+                const profileAvatar = document.getElementById("profile-avatar");
+                profileAvatar.textContent = initials;
+                profileAvatar.style.backgroundColor = backgroundColor;
+
+                // Obter e exibir histórico de cortes
+                const Haircut = Parse.Object.extend("Haircut");
+                const query = new Parse.Query(Haircut);
+                query.equalTo("user", user);
+
+                try {
+                    const results = await query.find();
+                    const haircutHistory = document.getElementById("haircut-history");
+
+                    if (results.length > 0) {
+                        results.forEach((haircut) => {
+                            const listItem = document.createElement("li");
+                            listItem.textContent = `${haircut.get("date")} - ${haircut.get("style")}`;
+                            haircutHistory.appendChild(listItem);
+                        });
+                    } else {
+                        haircutHistory.textContent = "Nenhum corte registrado.";
+                    }
+                } catch (error) {
+                    console.error("Erro ao carregar o histórico de cortes:", error);
+                }
+            } else {
+                alert("Usuário não está logado!");
+                window.location.href = "login.html";
+            }
+        });
+
+        // Logout
+        document.getElementById("logout-button").addEventListener("click", async function () {
+            try {
+                await Parse.User.logOut();
+                alert("Você saiu da conta!");
+                window.location.href = "login.html";
+            } catch (error) {
+                console.error("Erro ao fazer logout:", error);
+                alert(`Erro ao sair: ${error.message}`);
+            }
+        });
+    </script>
+</body>
+</html>

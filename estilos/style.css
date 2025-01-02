@@ -1,0 +1,21 @@
+    
+    
+        .mobile-menu-links {
+            display: none;
+          }
+          .mobile-menu-links.active {
+            display: flex;
+            flex-direction: column;
+          }
+    
+        header, nav {
+            background-color: #1d2e4e;
+        }
+
+        .logo {
+            height: 150px;
+        }
+
+        .splide__slide {
+          margin-top: 20px;
+        }
