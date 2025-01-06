@@ -15,8 +15,13 @@
     // Configurar persistência de sessão
     Parse.User.enableUnsafeCurrentUser(); // Habilitar manipulação do usuário atual
     Parse.setAsyncStorage(localStorage); // Persistir sessão no localStorage
-</script>
+
+    // Configurar persistência de sessão
+    Parse.User.enableUnsafeCurrentUser();
+    Parse.setAsyncStorage(localStorage);
     </script>
+
+
 
     <!-- CSS -->
     <link rel="stylesheet" href="estilos/tailwind.css">
@@ -106,6 +111,14 @@
     </div>
 
     <script>
+
+    const mobileMenuButton = document.getElementById('mobile-menu');
+    const mobileMenuLinks = document.querySelector('.mobile-menu-links');
+
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenuLinks.classList.toggle('active');
+    });
+
     const loginForm = document.getElementById('login-form');
     const registerForm = document.getElementById('register-form');
     const registerLink = document.getElementById('register-link');

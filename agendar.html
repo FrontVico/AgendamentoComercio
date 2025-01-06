@@ -85,8 +85,8 @@
       mobileMenuLinks.classList.toggle('active');
     });
 
-    // Atualizar horários disponíveis quando a data mudar
-    document.getElementById("appointment-date").addEventListener("change", async function () {
+     // Atualizar horários disponíveis quando a data mudar
+     document.getElementById("appointment-date").addEventListener("change", async function () {
         const selectedDate = this.value; 
         const appointmentTimeDropdown = document.getElementById("appointment-time");
         const availableTimes = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"];
@@ -132,38 +132,49 @@
     });
 
     // Salvar agendamento
-    document.getElementById("schedule-form").addEventListener("submit", async function (event) {
-        event.preventDefault();
+document.getElementById("schedule-form").addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-        const clientName = document.getElementById("client-name").value;
-        const serviceType = document.getElementById("service-type").value;
-        const appointmentDate = document.getElementById("appointment-date").value;
-        const appointmentTime = document.getElementById("appointment-time").value;
+    // Verificar se o usuário está logado
+    const currentUser = Parse.User.current();
+    if (!currentUser) {
+        alert("Você precisa estar logado para confirmar um agendamento.");
+        window.location.href = "login.html"; // Redirecionar para a página de login
+        return;
+    }
 
-        if (!appointmentTime) {
-            alert("Por favor, escolha um horário disponível.");
-            return;
-        }
+    // Capturar os dados do formulário
+    const clientName = document.getElementById("client-name").value;
+    const serviceType = document.getElementById("service-type").value;
+    const appointmentDate = document.getElementById("appointment-date").value;
+    const appointmentTime = document.getElementById("appointment-time").value;
 
-        const Appointment = Parse.Object.extend("Appointments");
-        const appointment = new Appointment();
+    // Validar se um horário foi selecionado
+    if (!appointmentTime) {
+        alert("Por favor, escolha um horário disponível.");
+        return;
+    }
 
-        appointment.set("clientName", clientName);
-        appointment.set("serviceType", serviceType);
-        appointment.set("date", new Date(appointmentDate));
-        appointment.set("time", appointmentTime);
+    // Criar o objeto de agendamento
+    const Appointment = Parse.Object.extend("Appointments");
+    const appointment = new Appointment();
 
-        try {
-            await appointment.save();
-            alert("Agendamento realizado com sucesso!");
-            document.getElementById("schedule-form").reset();
-            document.getElementById("appointment-time").innerHTML = '<option value="" disabled selected>Escolha um horário</option>';
-        } catch (error) {
-            console.error("Erro ao salvar agendamento:", error);
-            alert("Erro ao realizar o agendamento. Tente novamente.");
-        }
-    });
+    appointment.set("clientName", clientName);
+    appointment.set("serviceType", serviceType);
+    appointment.set("date", new Date(appointmentDate));
+    appointment.set("time", appointmentTime);
+    appointment.set("user", currentUser); // Associar o agendamento ao usuário logado
 
-    
+    try {
+        // Salvar o agendamento no banco
+        await appointment.save();
+        alert("Agendamento realizado com sucesso!");
+        document.getElementById("schedule-form").reset();
+        document.getElementById("appointment-time").innerHTML = '<option value="" disabled selected>Escolha um horário</option>';
+    } catch (error) {
+        console.error("Erro ao salvar agendamento:", error);
+        alert("Erro ao realizar o agendamento. Tente novamente.");
+    }
+});
     </script>
 </html>
